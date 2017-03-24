@@ -101,6 +101,6 @@ class Quote(models.Model):
 
 class Favorite(models.Model):
     quote = models.ForeignKey(Quote, related_name='quote_favorites')
-    user = models.ForeignKey(User, related_name='user_favorites')
+    user = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

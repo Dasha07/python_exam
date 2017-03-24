@@ -19,10 +19,6 @@ def login(request):
         return redirect('belt_exam:home')
     else:
         return redirect('/')
-def new_user(request):
-	return render(request, 'belt_exam:new_user')
-
-
 
 def home(request):
     users = User.objects.all()
@@ -44,7 +40,7 @@ def home(request):
 def add(request, quote_id):
     new_user = User.objects.get(id=request.session['user_id'])
     new_quote = Quote.objects.get(id=quote_id)
-    new_favorite =Favorite.objects.create(user=new_user, quote=new_quote)
+    Favorite.objects.create(user=new_user, quote=new_quote)
     return redirect('belt_exam:home')
 
 def drop(request, quote_id):

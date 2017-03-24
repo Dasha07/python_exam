@@ -6,7 +6,9 @@
     {% load staticfiles %}
   </head>
   <body>
-      <h1>Welcome, {{user.name}} </h1>
+      {% if request.session.user_id %}
+
+      <h1>Welcome, {{user.name}}</h1>
 
     <h3>Contribute a Quote: </h3>
 
@@ -22,6 +24,7 @@
     <p>{{m}}</p>
     {% endfor %}
 
+
       <h2> Quotable Quotes:</h2>
 
       {% for quote in all_quotes %}
@@ -35,12 +38,12 @@
 
       <hr>
 <h2> Your Favorites</h2>
-{% for quote in my_favorite %}
+{% for favorite in my_favorite %}
   <h5>Quoted By:</h5> <p>{{favorite.quote.name}}<p>
-  <h5>The Quote:</h5> {{favorite.quote.user_id}}
-  <i>Posted by <a href="{% url 'belt_exam:show_user' user_id=quote.id %}"> {{user.name}}</a></i>
+  <h5>The Quote:</h5> {{favorite.quote.message}}
+  <i>Posted by <a href="{% url 'belt_exam:add' quote_id=favorite.quote.id %}"> {{favorite.user.name}}</a></i>
 					<br>
-  <td><a href="{% url 'belt_exam:drop' quote_id=quote.id %}">Remove from my List</a></td>
+  <td><a href="{% url 'belt_exam:drop' quote_id=favorite.quote.id %}">Remove from my List</a></td>
   </tr>
       {% endfor %}
 
@@ -63,7 +66,7 @@
 
       </table><br>
       <hr>
-
+{% endif %}
         <a href="/logout"> Logout </a>
 
   </body>
