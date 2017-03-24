@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> Home</title>
+    {% load staticfiles %}
+  </head>
+  <body>
+      <h1>Hello, {{user.name}} </h1>
+
+      <h2> Current Users: </h2>
+
+      <hr>
+
+      <table>
+          <tr>
+            <th> User ID </th>
+            <th> User Name </th>
+            <th> Alias </th>
+            <th> Email </th>
+        </tr>
+        {% for user in users %}
+        <tr>
+          <td>{{user.id}}</td>
+          <td>{{user.name}}</td>
+          <td>{{user.alias}}</td>
+          <td>{{user.email}}</td>
+          <td><a href="{% url 'belt_exam:add' user_id=user.id %}">Add Friend</a></td>
+        </tr>
+        {% endfor %}
+      </table><br>
+      <hr>
+        <a href="/logout"> Logout </a>
+
+  </body>
+</html>
