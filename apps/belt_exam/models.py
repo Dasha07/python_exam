@@ -15,6 +15,7 @@ class UserManager(models.Manager):
         email = request.POST['email']
         reg_password = request.POST['reg_password']
         reg_password2 = request.POST['reg_password2']
+        today = datetime.today()
         regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         valid = True
 
@@ -33,17 +34,24 @@ class UserManager(models.Manager):
         if reg_password != reg_password2:
             messages.warning(request, "Passwords do not match")
             valid = False
+        if not request.POST['birthdate']:
+            messages.warning(request, "The Birthdate cannot be blank")
         else:
-            if valid == True:
+            birthdate = datetime.strptime(request.POST['birthdate'], '%Y-%m-%d')
+            if (birthdate.year + 13, birthdate.month, birthdate.day) > (today.year, today.month, today.day):
+                messages.warning(request, "You must be at least 13 to register!")
+                valid = False
+        if User.objects.filter(alias = alias):
+            messages.warning(request, "Alias is already taken.")
+            valid = False
+        if User.objects.filter(email = email):
+            messages.warning(request, "You have registered with this email before, Please login.")
+            valid = False
+        if valid == True:
                 hashedpw = bcrypt.hashpw(reg_password.encode('UTF-8'), bcrypt.gensalt())
-                makeuser = User.objects.create(name = name, alias = alias, email = email, password = hashedpw)
+                makeuser = User.objects.create(name = name, alias = alias, email = email, birthdate= birthdate, password = hashedpw)
                 return makeuser
                 messages.success(request, "You have successfully registered, please Login.")
-            if User.objects.filter(email = email):
-                messages.warning(request, "You have registered with this email before, Please login.")
-                valid = False
-
-
         return False
 
 
@@ -79,11 +87,20 @@ class User(models.Model):
       alias = models.CharField(max_length=45, default='')
       email = models.CharField(max_length=45, default='')
       password = models.CharField(max_length=200, default='')
+      birthdate = models.DateField()
       created_at = models.DateTimeField(auto_now_add=True)
       updated_at = models.DateTimeField(auto_now=True)
       objects = UserManager()
 
-class Friend(models.Model):
-    friend = models.ForeignKey(User)
+class Quote(models.Model):
+    name = models.CharField(max_length=64)
+    message = models.CharField(max_length=255)
+    posted_by = models.ForeignKey(User, related_name='all_quotes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Favorite(models.Model):
+    quote = models.ForeignKey(Quote, related_name='quote_favorites')
+    user = models.ForeignKey(User, related_name='user_favorites')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

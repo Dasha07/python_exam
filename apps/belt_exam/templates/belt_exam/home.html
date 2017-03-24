@@ -6,30 +6,64 @@
     {% load staticfiles %}
   </head>
   <body>
-      <h1>Hello, {{user.name}} </h1>
+      <h1>Welcome, {{user.name}} </h1>
 
-      <h2> Current Users: </h2>
+    <h3>Contribute a Quote: </h3>
+
+    <form action="{% url 'belt_exam:create' %}"method="post">
+            {% csrf_token %}
+        <label for="name">Quoted By: </label>
+        <input type="text" name="name"><br><br>
+        <label for="">Message: </label>
+        <textarea name="message" rows="8" cols="50"></textarea><br><br>
+        <input type="submit" value="Submit Quote">
+    </form>
+    <hr> {% for m in messages %}
+    <p>{{m}}</p>
+    {% endfor %}
+
+      <h2> Quotable Quotes:</h2>
+
+      {% for quote in all_quotes %}
+
+        <h5>Quoted By:</h5> <p>{{quote.name}}<p>
+        <h5>The Quote:</h5> {{quote.message}}
+        Posted by: <a href="{% url 'belt_exam:show_user' user_id=quote.posted_by.id %}">{{quote.posted_by.name}}</a>
+        <td><a href="{% url 'belt_exam:add' quote_id=quote.id %}">Add to My List</a></td>
+        </tr>
+            {% endfor %}
 
       <hr>
+<h2> Your Favorites</h2>
+{% for quote in my_favorite %}
+  <h5>Quoted By:</h5> <p>{{favorite.quote.name}}<p>
+  <h5>The Quote:</h5> {{favorite.quote.user_id}}
+  <i>Posted by <a href="{% url 'belt_exam:show_user' user_id=quote.id %}"> {{user.name}}</a></i>
+					<br>
+  <td><a href="{% url 'belt_exam:drop' quote_id=quote.id %}">Remove from my List</a></td>
+  </tr>
+      {% endfor %}
 
+    <hr>
       <table>
           <tr>
             <th> User ID </th>
             <th> User Name </th>
             <th> Alias </th>
             <th> Email </th>
+            <th> DOB </th>
         </tr>
-        {% for user in users %}
+
         <tr>
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
           <td>{{user.alias}}</td>
           <td>{{user.email}}</td>
-          <td><a href="{% url 'belt_exam:add' user_id=user.id %}">Add Friend</a></td>
-        </tr>
-        {% endfor %}
+          <td>{{user.birthdate}}</td>
+
       </table><br>
       <hr>
+
         <a href="/logout"> Logout </a>
 
   </body>

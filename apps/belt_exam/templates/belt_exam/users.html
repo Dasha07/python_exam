@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Users Page</title>
+        {% load staticfiles %}
+    </head>
+    <body>
+        <h2>Posted by  {{ user.name}}</h2>
+            <a href="/logout"><button type="button" name="logout">Log Out</button></a>
+            <a href="/home"><button type="button" name="home">Home</button></a>
+
+		<h2>Count: {{user.quote_count}}</h2>
+
+		{% for quote in my_quotes %}
+			<p>
+			{{quote.name}}
+			{{quote.message}}
+			</p>
+		{% endfor %}
+    </body>
+</html>

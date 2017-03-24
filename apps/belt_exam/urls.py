@@ -7,5 +7,8 @@ urlpatterns = [
     url(r'register$', register, name='register'),
     url(r'login$', login, name='login'),
     url(r'logout$', logout, name='logout'),
-    url(r'^add/(?P<user_id>\d+)$', add, name='add')
+    url(r'^add/(?P<quote_id>\d+)$', add, name='add'),
+    url(r'^create/$', create, name='create'),
+    url(r'^drop/(?P<quote_id>\d+)$', drop, name='drop'),
+    url(r'^show_user/(?P<user_id>[0-9]+)$', show_user, name='show_user')
 ]
